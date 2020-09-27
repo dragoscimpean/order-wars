@@ -55,20 +55,20 @@ export default {
     return {
       started: false,
       round: 1,
-      attacker: {
-
-      },
-      leftCharacter: {
-
-      },
-      rightCharacter: {
-
-      }
+      attacker: {},
+      player: {},
+      enemy: {}
     }
   },
   methods: {
-    start() {
+    async start() {
       this.started = !this.started;
+
+      const response = await this.$http.get('http://order-wars.test/start');
+      console.log(response);
+      this.attacker = response.data.attacker;
+      this.player = response.data.orderus;
+      this.enemy = response.data.beast;
     }
   }
 }
