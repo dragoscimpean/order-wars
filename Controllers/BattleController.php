@@ -16,9 +16,4 @@ class BattleController {
             'attacker' => $attacker,
         ]);
     }
-
-    public function test() {
-        var_dump(new Beast());
-        die();
-    }
 }
