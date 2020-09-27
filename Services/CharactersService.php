@@ -23,6 +23,6 @@ class CharactersService {
             }
         }
 
-        return $attacker;
+        return $attacker->name;
     }
 }

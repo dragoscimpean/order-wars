@@ -88,9 +88,9 @@ export default {
 
       const response = await this.$http.get('http://order-wars.test/start');
 
-      this.attacker = response.data.attacker;
       this.player = response.data.orderus;
       this.enemy = response.data.beast;
+      this.attacker = response.data.attacker === 'Orderus' ? this.player : this.enemy;
     },
     getEntityAnimationUrl(entity) {
       return require('../assets/characters/'+entity+'/'+this[entity+'Animation'])
