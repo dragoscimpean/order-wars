@@ -3,6 +3,8 @@
 namespace Characters;
 
 class Beast extends Character {
+    public string $name = 'Beast';
+
     private const MIN_HEALTH = 60;
     private const MAX_HEALTH = 90;
 

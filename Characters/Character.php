@@ -3,6 +3,8 @@
 namespace Characters;
 
 class Character {
+    public string $name = 'Unknown';
+
     public int $health;
     public int $strength;
     public int $defence;

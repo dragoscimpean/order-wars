@@ -2,7 +2,7 @@
 <div>
   <div class="d-flex justify-content-around">
     <b-card
-        title="Player"
+        :title="player.name"
         img-src="../assets/alliance-banner.png"
         img-alt="Image"
         img-top
@@ -11,7 +11,7 @@
         class="mb-2"
         v-show="player"
     >
-      <b-progress :max="100" height="2rem" show-progress v-for="stat in Object.keys(player)" :key="'player'+stat" class="mt-2">
+      <b-progress :max="100" height="2rem" show-progress v-for="stat in getPlayerStats" :key="'player'+stat" class="mt-2">
         <b-progress-bar :value="player[stat]">
           <span>{{ stat }}: <strong>{{ player[stat] }} / 100</strong></span>
         </b-progress-bar>
@@ -23,7 +23,7 @@
     </div>
 
     <b-card
-        title="Enemy"
+        :title="enemy.name"
         img-src="../assets/horde-banner.jpg"
         img-alt="Image"
         img-top
@@ -32,7 +32,7 @@
         class="mb-2"
         v-show="enemy"
     >
-      <b-progress :max="100" height="2rem" show-progress v-for="stat in Object.keys(enemy)" :key="'enemy'+stat" class="mt-2">
+      <b-progress :max="100" height="2rem" show-progress v-for="stat in getEnemyStats" :key="'enemy'+stat" class="mt-2">
         <b-progress-bar :value="enemy[stat]">
           <span>{{ stat }}: <strong>{{ enemy[stat] }} / 100</strong></span>
         </b-progress-bar>
@@ -69,6 +69,18 @@ export default {
       playerAnimation: 'stand.png',
       enemyAnimation: 'stand.png',
     }
+  },
+  computed: {
+    getPlayerStats() {
+      return Object.keys(this.player).filter(property => {
+        return Number.isInteger(this.player[property]);
+      });
+    },
+    getEnemyStats() {
+      return Object.keys(this.enemy).filter(property => {
+        return Number.isInteger(this.enemy[property]);
+      });
+    },
   },
   methods: {
     async start() {

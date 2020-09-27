@@ -3,6 +3,8 @@
 namespace Characters;
 
 Class Orderus extends Character {
+    public string $name = 'Orderus';
+
     private const MIN_HEALTH = 70;
     private const MAX_HEALTH = 100;
 
