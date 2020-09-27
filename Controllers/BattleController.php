@@ -2,6 +2,9 @@
 
 namespace Controllers;
 
+use Characters\Beast;
+use Characters\Orderus;
+
 class BattleController {
     public function start() {
         var_dump('start battle');
@@ -9,7 +12,7 @@ class BattleController {
     }
 
     public function test() {
-        var_dump('test controller');
+        var_dump(new Beast());
         die();
     }
 }
