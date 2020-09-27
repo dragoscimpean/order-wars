@@ -90,18 +90,22 @@ export default {
 
       this.player = response.data.orderus;
       this.enemy = response.data.beast;
-      this.attacker = response.data.attacker === 'Orderus' ? this.player : this.enemy;
+      this.attacker = response.data.attacker === 'Orderus' ? 'player' : 'enemy';
+      console.log(this.attacker);
+      this.attack(this.attacker);
+      console.log('attacked');
     },
     getEntityAnimationUrl(entity) {
       return require('../assets/characters/'+entity+'/'+this[entity+'Animation'])
     },
-    attack(entity) {
-      const entityAnimation = entity + 'Animation';
-      this[entityAnimation] = 'run.gif';
-      this.$refs[entity].classList.add(entity+'Move');
+    attack(attacker) {
+      console.log(attacker + 'is attacking!');
+      const attackerAnimation = attacker + 'Animation';
+      this[attackerAnimation] = 'run.gif';
+      this.$refs[attacker].classList.add(attacker+'Move');
       setTimeout(async () => {
-        this[entityAnimation] = 'attack.gif';
-        const target = entity === 'player' ? 'enemy' : 'player';
+        this[attackerAnimation] = 'attack.gif';
+
 
         const response = await this.$http({
           method: 'post',
@@ -109,22 +113,26 @@ export default {
           data: {
             player: this.player,
             enemy: this.enemy,
-            attacker: this[entity].name,
+            attacker: this[attacker].name,
           }
         });
 
-        console.log(response);
+        this.player = response.data.player;
+        this.enemy = response.data.enemy;
+        this.attacker = response.data.attacker;
 
-        this[target].health -= response.data.damageDealt;
+        const target = attacker === 'player' ? 'enemy' : 'player';
         if (this[target].health <= 0) {
           this.die(target);
         }
+
         setTimeout(() => {
-          this[entityAnimation] = 'run.gif';
-          this.$refs[entity].classList.remove(entity+'Move');
+          this[attackerAnimation] = 'run.gif';
+          this.$refs[attacker].classList.remove(attacker+'Move');
 
           setTimeout(() => {
-            this[entityAnimation] = 'stand.png';
+            this[attackerAnimation] = 'stand.png';
+            this.round++;
           },2000)
         }, 1000)
       }, 2000);
@@ -150,6 +158,7 @@ export default {
 
 .player {
   left:30%;
+  z-index: 2;
 }
 
 .playerMove {

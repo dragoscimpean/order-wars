@@ -10,5 +10,7 @@ class ObjectService {
         foreach ($properties as $property => $value) {
             $object->$property = $value;
         }
+
+        return $object;
     }
 }

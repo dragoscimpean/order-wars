@@ -6,11 +6,13 @@ use Services\ObjectService;
 
 class Character {
     public function __construct($properties = null) {
+        if ($properties) {
+            return ObjectService::syncProperties($this, $properties);
+        }
         $this->spawn();
-        ObjectService::syncProperties($this, $properties);
     }
 
-    protected function spawn() {
+    public function spawn() {
         $this->health = rand($this->statsThreshold['min_health'], $this->statsThreshold['max_health']);
         $this->strength = rand($this->statsThreshold['min_strength'], $this->statsThreshold['max_strength']);
         $this->defence = rand($this->statsThreshold['min_defence'], $this->statsThreshold['max_defence']);
