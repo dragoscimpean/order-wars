@@ -6,8 +6,16 @@ use ReflectionMethod;
 use ReflectionParameter;
 
 class Router {
-    public static function get(string $route,string  $action) {
-        if (!self::isCorrectRoute($route)) {
+    public static function get(string $route, string $action) {
+        self::request($route, $action, 'GET');
+    }
+
+    public static function post(string $route, string $action) {
+        self::request($route, $action, 'POST');
+    }
+
+    public static function request(string $route,string  $action, string $method) {
+        if (!self::isCorrectRoute($route, $method)) {
             return false;
         }
 
@@ -19,8 +27,8 @@ class Router {
         return (new $controller())->$method(...$parameters);
     }
 
-    private static function isCorrectRoute($route) {
-        return $route === $_SERVER['REQUEST_URI'];
+    private static function isCorrectRoute(string $route, string $method) {
+        return $route === $_SERVER['REQUEST_URI'] && $_SERVER['REQUEST_METHOD'] === $method;
     }
 
     protected static function instantiateObjectParameters(string $controller, string $method): array
