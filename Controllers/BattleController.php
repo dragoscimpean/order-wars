@@ -2,13 +2,17 @@
 
 namespace Controllers;
 
-use Characters\Beast;
-use Characters\Orderus;
+use Services\CharactersService;
 
 class BattleController {
-    public function start() {
-        var_dump('start battle');
-        die();
+    public function start(CharactersService $charactersService) {
+        list($orderus, $beast) = $charactersService->spawn();
+
+        http_response_code(200);
+        echo json_encode([
+            'orderus' => $orderus,
+            'beast' => $beast,
+        ]);
     }
 
     public function test() {
