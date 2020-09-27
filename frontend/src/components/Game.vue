@@ -1,12 +1,48 @@
 <template>
 <div>
-  <img alt="Vue logo" class="logo" :class="{ moveTop: started }" src="../assets/logo.png">
+  <div class="d-flex justify-content-around">
+    <b-card
+        title="Card Title"
+        img-src="https://picsum.photos/600/300/?image=25"
+        img-alt="Image"
+        img-top
+        tag="article"
+        style="max-width: 20rem;"
+        class="mb-2"
+    >
+      <b-card-text>
+        Some quick example text to build on the card title and make up the bulk of the card's content.
+      </b-card-text>
+
+      <b-button href="#" variant="primary">Go somewhere</b-button>
+    </b-card>
+    <div>
+      <img alt="Vue logo" class="logo" :class="{ moveTop: started }" src="../assets/logo.png">
+      <div v-if="started"><h1>Round {{ round }}</h1></div>
+    </div>
+    <b-card
+        title="Card Title"
+        img-src="https://picsum.photos/600/300/?image=25"
+        img-alt="Image"
+        img-top
+        tag="article"
+        style="max-width: 20rem;"
+        class="mb-2"
+    >
+      <b-card-text>
+        Some quick example text to build on the card title and make up the bulk of the card's content.
+      </b-card-text>
+
+      <b-button href="#" variant="primary">Go somewhere</b-button>
+    </b-card>
+  </div>
+
   <div class="hello">
     <div class="startButton" v-if="!started" @click="start()">
       Start
     </div>
     <div v-else>
-      <h1>Round {{ round }}</h1>
+
     </div>
   </div>
 </div>
@@ -42,7 +78,7 @@ export default {
 <style scoped>
 .logo {
   border-radius: 29px;
-  margin-top: 200px;
+  margin-top: 130px;
   transition: 0.3s;
 }
 
