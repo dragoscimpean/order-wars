@@ -2,38 +2,41 @@
 <div>
   <div class="d-flex justify-content-around">
     <b-card
-        title="Card Title"
-        img-src="https://picsum.photos/600/300/?image=25"
+        title="Player"
+        img-src="../assets/alliance-banner.png"
         img-alt="Image"
         img-top
         tag="article"
         style="max-width: 20rem;"
         class="mb-2"
+        v-show="player"
     >
-      <b-card-text>
-        Some quick example text to build on the card title and make up the bulk of the card's content.
-      </b-card-text>
-
-      <b-button href="#" variant="primary">Go somewhere</b-button>
+      <b-progress :max="100" height="2rem" show-progress v-for="stat in Object.keys(player)" :key="'player'+stat" class="mt-2">
+        <b-progress-bar :value="player[stat]">
+          <span>{{ stat }}: <strong>{{ player[stat] }} / 100</strong></span>
+        </b-progress-bar>
+      </b-progress>
     </b-card>
     <div>
       <img alt="Vue logo" class="logo" :class="{ moveTop: started }" src="../assets/logo.png">
       <div v-if="started"><h1>Round {{ round }}</h1></div>
     </div>
+
     <b-card
-        title="Card Title"
-        img-src="https://picsum.photos/600/300/?image=25"
+        title="Enemy"
+        img-src="../assets/horde-banner.jpg"
         img-alt="Image"
         img-top
         tag="article"
         style="max-width: 20rem;"
         class="mb-2"
+        v-show="enemy"
     >
-      <b-card-text>
-        Some quick example text to build on the card title and make up the bulk of the card's content.
-      </b-card-text>
-
-      <b-button href="#" variant="primary">Go somewhere</b-button>
+      <b-progress :max="100" height="2rem" show-progress v-for="stat in Object.keys(enemy)" :key="'enemy'+stat" class="mt-2">
+        <b-progress-bar :value="enemy[stat]">
+          <span>{{ stat }}: <strong>{{ enemy[stat] }} / 100</strong></span>
+        </b-progress-bar>
+      </b-progress>
     </b-card>
   </div>
 
@@ -41,8 +44,13 @@
     <div class="startButton" v-if="!started" @click="start()">
       Start
     </div>
-    <div v-else>
-
+    <div v-else class="battleground">
+      <img class="characters player" :src="getEntityAnimationUrl('player')" ref="player">
+      <img class="characters enemy" :src="getEntityAnimationUrl('enemy')" ref="enemy">
+    </div>
+    <div>
+      <button @click="attack('player')">Player Atk</button>
+      <button @click="attack('enemy')">Enemy Atk</button>
     </div>
   </div>
 </div>
@@ -56,8 +64,10 @@ export default {
       started: false,
       round: 1,
       attacker: {},
-      player: {},
-      enemy: {}
+      player: false,
+      enemy: false,
+      playerAnimation: 'stand.png',
+      enemyAnimation: 'stand.png',
     }
   },
   methods: {
@@ -65,10 +75,41 @@ export default {
       this.started = !this.started;
 
       const response = await this.$http.get('http://order-wars.test/start');
-      console.log(response);
+
       this.attacker = response.data.attacker;
       this.player = response.data.orderus;
       this.enemy = response.data.beast;
+    },
+    getEntityAnimationUrl(entity) {
+      return require('../assets/characters/'+entity+'/'+this[entity+'Animation'])
+    },
+    attack(entity) {
+      const entityAnimation = entity + 'Animation';
+      this[entityAnimation] = 'run.gif';
+      this.$refs[entity].classList.add(entity+'Move');
+      setTimeout(() => {
+        this[entityAnimation] = 'attack.gif';
+        const target = entity === 'player' ? 'enemy' : 'player';
+        this[target].health -= 10;
+        if (this[target].health <= 0) {
+          this.die(target);
+        }
+        setTimeout(() => {
+          this[entityAnimation] = 'run.gif';
+          this.$refs[entity].classList.remove(entity+'Move');
+
+          setTimeout(() => {
+            this[entityAnimation] = 'stand.png';
+          },2000)
+        }, 1000)
+      }, 2000);
+    },
+    die(entity) {
+      const entityAnimation = entity + 'Animation';
+      this[entityAnimation] = 'die.gif';
+      setTimeout(() => {
+        this[entityAnimation] = 'dead.png';
+      }, 1000)
     }
   }
 }
@@ -76,6 +117,30 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+
+.enemy {
+  right: 30%;
+}
+
+.player {
+  left:30%;
+}
+
+.playerMove {
+  left: 55%;
+}
+
+.enemyMove {
+  right: 55%;
+}
+
+.characters {
+  position:absolute;
+  height:200px;
+  transition: 2s left, 2s right;
+}
+
 .logo {
   border-radius: 29px;
   margin-top: 130px;
