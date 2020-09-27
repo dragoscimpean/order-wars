@@ -99,10 +99,23 @@ export default {
       const entityAnimation = entity + 'Animation';
       this[entityAnimation] = 'run.gif';
       this.$refs[entity].classList.add(entity+'Move');
-      setTimeout(() => {
+      setTimeout(async () => {
         this[entityAnimation] = 'attack.gif';
         const target = entity === 'player' ? 'enemy' : 'player';
-        this[target].health -= 10;
+
+        const response = await this.$http({
+          method: 'post',
+          url: 'http://order-wars.test/attack',
+          data: {
+            player: this.player,
+            enemy: this.enemy,
+            attacker: this[entity].name,
+          }
+        });
+
+        console.log(response);
+
+        this[target].health -= response.data.damageDealt;
         if (this[target].health <= 0) {
           this.die(target);
         }

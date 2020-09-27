@@ -25,4 +25,8 @@ class CharactersService {
 
         return $attacker->name;
     }
+
+    public function updateCharactersStats($player, $enemy) {
+        return [new Orderus($player), new Beast($enemy)];
+    }
 }

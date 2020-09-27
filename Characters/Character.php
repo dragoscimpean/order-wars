@@ -2,35 +2,25 @@
 
 namespace Characters;
 
+use Services\ObjectService;
+
 class Character {
-    public string $name = 'Unknown';
-
-    public int $health;
-    public int $strength;
-    public int $defence;
-    public int $speed;
-    public int $luck;
-
-    private const MIN_HEALTH = 0;
-    private const MAX_HEALTH = 100;
-
-    private const MIN_STRENGTH = 0;
-    private const MAX_STRENGTH = 100;
-
-    private const MIN_DEFENCE = 0;
-    private const MAX_DEFENCE = 100;
-
-    private const MIN_SPEED = 0;
-    private const MAX_SPEED = 100;
-
-    private const MIN_LUCK = 0;
-    private const MAX_LUCK = 100;
+    public function __construct($properties = null) {
+        $this->spawn();
+        ObjectService::syncProperties($this, $properties);
+    }
 
     protected function spawn() {
-        $this->health = rand(self::MIN_HEALTH, self::MAX_HEALTH);
-        $this->strength = rand(self::MIN_STRENGTH, self::MAX_STRENGTH);
-        $this->defence = rand(self::MIN_DEFENCE, self::MAX_DEFENCE);
-        $this->speed = rand(self::MIN_SPEED, self::MAX_SPEED);
-        $this->luck = rand(self::MIN_LUCK, self::MAX_LUCK);
+        $this->health = rand($this->statsThreshold['min_health'], $this->statsThreshold['max_health']);
+        $this->strength = rand($this->statsThreshold['min_strength'], $this->statsThreshold['max_strength']);
+        $this->defence = rand($this->statsThreshold['min_defence'], $this->statsThreshold['max_defence']);
+        $this->speed = rand($this->statsThreshold['min_speed'], $this->statsThreshold['max_speed']);
+        $this->luck = rand($this->statsThreshold['min_luck'], $this->statsThreshold['max_luck']);
+    }
+
+    public function attack($target) {
+        $inflictedDamage = $this->strength > $target->defence ? $this->strength - $target->defence : 0;
+        $target->health -= $inflictedDamage;
+        return $inflictedDamage;
     }
 }
