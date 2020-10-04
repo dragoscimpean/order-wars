@@ -34,8 +34,12 @@ class Character {
 
     public function attack($target) {
         $inflictedDamage = $this->strength > $target->defence ? $this->strength - $target->defence : 0;
-        $target->health -= $inflictedDamage;
+        $target->takeDamage($inflictedDamage);
         return $inflictedDamage;
+    }
+
+    public function takeDamage($damage) {
+        $this->health = $this->health > $damage ? ($this->health - $damage) : 0;
     }
 
     protected function init($character, $properties = null) {
