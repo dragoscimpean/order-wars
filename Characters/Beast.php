@@ -7,6 +7,11 @@ use Services\ObjectService;
 class Beast extends Character {
     public string $name = 'Beast';
 
+    public function __construct($properties = null)
+    {
+        $this->init($this, $properties);
+    }
+
     protected array $statsThreshold = [
         'min_health' => 60,
         'max_health' => 90,

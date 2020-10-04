@@ -7,6 +7,13 @@ use Services\ObjectService;
 Class Orderus extends Character {
     public string $name = 'Orderus';
 
+    public function __construct($properties = null)
+    {
+        $this->init($this, $properties);
+//        var_dump($this);
+//        die();
+    }
+
     protected array $statsThreshold = [
         'min_health' => 70,
         'max_health' => 100,

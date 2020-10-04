@@ -1,5 +1,6 @@
 <template>
 <div>
+  <img class="fatality" v-if="matchOver" src="../assets/fatality.png" alt="">
   <div class="d-flex justify-content-around">
     <b-card
         :title="player.name"
@@ -48,10 +49,6 @@
       <img class="characters player" :src="getEntityAnimationUrl('player')" ref="player">
       <img class="characters enemy" :src="getEntityAnimationUrl('enemy')" ref="enemy">
     </div>
-    <div>
-      <button @click="attack('player')">Player Atk</button>
-      <button @click="attack('enemy')">Enemy Atk</button>
-    </div>
   </div>
 </div>
 </template>
@@ -68,6 +65,7 @@ export default {
       enemy: false,
       playerAnimation: 'stand.png',
       enemyAnimation: 'stand.png',
+      matchOver: false,
     }
   },
   computed: {
@@ -91,18 +89,19 @@ export default {
       this.player = response.data.orderus;
       this.enemy = response.data.beast;
       this.attacker = response.data.attacker === 'Orderus' ? 'player' : 'enemy';
-      console.log(this.attacker);
+
       this.attack(this.attacker);
-      console.log('attacked');
     },
     getEntityAnimationUrl(entity) {
       return require('../assets/characters/'+entity+'/'+this[entity+'Animation'])
     },
     attack(attacker) {
-      console.log(attacker + 'is attacking!');
+      console.log(attacker + ' is attacking!');
       const attackerAnimation = attacker + 'Animation';
       this[attackerAnimation] = 'run.gif';
+      console.log(attacker, this.$refs[attacker])
       this.$refs[attacker].classList.add(attacker+'Move');
+      console.log(attacker + ' is moving');
       setTimeout(async () => {
         this[attackerAnimation] = 'attack.gif';
 
@@ -119,11 +118,16 @@ export default {
 
         this.player = response.data.player;
         this.enemy = response.data.enemy;
-        this.attacker = response.data.attacker;
+        this.attacker = response.data.attacker === 'Orderus' ? 'player' : 'enemy';
 
         const target = attacker === 'player' ? 'enemy' : 'player';
         if (this[target].health <= 0) {
-          this.die(target);
+          const entityAnimation = target + 'Animation';
+          this[entityAnimation] = 'die.gif';
+          setTimeout(() => {
+            this[entityAnimation] = 'dead.png';
+            this.matchOver = true;
+          }, 1000)
         }
 
         setTimeout(() => {
@@ -133,24 +137,30 @@ export default {
           setTimeout(() => {
             this[attackerAnimation] = 'stand.png';
             this.round++;
+            if(this.enemy.health > 0 && this.player.health > 0 && this.round < 20) {
+              this.attack(this.attacker);
+            }
           },2000)
         }, 1000)
       }, 2000);
     },
-    die(entity) {
-      const entityAnimation = entity + 'Animation';
-      this[entityAnimation] = 'die.gif';
-      setTimeout(() => {
-        this[entityAnimation] = 'dead.png';
-      }, 1000)
-    }
+    // die(entity) {
+    //
+    // }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.fatality {
+  position: fixed;
+  width:800px;
+  top:200px;
+  left: calc(50% - 400px);
+  margin: 0 auto;
+  z-index: 3;
+}
 
 .enemy {
   right: 30%;
@@ -158,7 +168,6 @@ export default {
 
 .player {
   left:30%;
-  z-index: 2;
 }
 
 .playerMove {
@@ -167,6 +176,10 @@ export default {
 
 .enemyMove {
   right: 55%;
+}
+
+.zindexPriority {
+  z-index: 2;
 }
 
 .characters {
