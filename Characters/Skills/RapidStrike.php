@@ -3,22 +3,20 @@
 namespace Characters\Skills;
 
 trait RapidStrike {
-    private int $chance = 10;
-    protected bool $invoked = false;
+    protected int $rapidStrikeChance = 50;
+    public bool $rapidStrikeInvoked = false;
 
     public function attack($target) {
         $inflictedDamage = parent::attack($target);
-        $inflictedDamage += $this->invoke($target);
 
-        return $inflictedDamage;
-    }
-
-    public function invoke($target) {
-        if ($this->chance > rand(0, 100)) {
-            $this->invoked = true;
-            return parent::attack($target);
+        if ($this->rapidStrikeChance < rand(0, 100)) {
+            $this->rapidStrikeInvoked = false;
+            return $inflictedDamage;
         }
 
-        return false;
+        $this->rapidStrikeInvoked = true;
+        $inflictedDamage += parent::attack($target);
+
+        return $inflictedDamage;
     }
 }

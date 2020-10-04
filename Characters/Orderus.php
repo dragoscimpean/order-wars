@@ -2,10 +2,11 @@
 
 namespace Characters;
 
+use Characters\Skills\MagicShield;
 use Characters\Skills\RapidStrike;
 
 Class Orderus extends Character {
-    use RapidStrike;
+    use RapidStrike, MagicShield;
 
     public string $name = 'Orderus';
 
