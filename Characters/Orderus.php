@@ -2,16 +2,16 @@
 
 namespace Characters;
 
-use Services\ObjectService;
+use Characters\Skills\RapidStrike;
 
 Class Orderus extends Character {
+    use RapidStrike;
+
     public string $name = 'Orderus';
 
     public function __construct($properties = null)
     {
         $this->init($this, $properties);
-//        var_dump($this);
-//        die();
     }
 
     protected array $statsThreshold = [
