@@ -50,6 +50,8 @@
       <img class="characters enemy" :src="getEntityAnimationUrl('enemy')" ref="enemy">
     </div>
   </div>
+
+  <div class="battle-logs" v-show="started" v-html="battleLogs"></div>
 </div>
 </template>
 
@@ -66,7 +68,8 @@ export default {
       playerAnimation: 'stand.png',
       enemyAnimation: 'stand.png',
       matchOver: false,
-      backendUrl: 'http://localhost:8081/'
+      backendUrl: 'http://localhost:8081/',
+      battleLogs: 'Battle Begun!<br>',
     }
   },
   computed: {
@@ -117,6 +120,16 @@ export default {
           }
         });
 
+        if (attacker == 'player' && response.data.player.rapidStrikeInvoked) {
+          this.battleLogs += 'the Player used RapidStrike to inflict double damage<br>'
+        }
+
+        if (attacker == 'enemy' && response.data.player.magicShieldInvoked) {
+          this.battleLogs += 'the Player used MagicShield to absorb half of the damage<br>'
+        }
+
+        this.battleLogs += attacker + ' inflicted ' + response.data.inflictedDamage + ' damage<br>'
+
         this.player = response.data.player;
         this.enemy = response.data.enemy;
         this.attacker = response.data.attacker === 'Orderus' ? 'player' : 'enemy';
@@ -154,6 +167,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.battle-logs {
+  margin-top: 250px;
+}
+
 .fatality {
   position: fixed;
   width:800px;
