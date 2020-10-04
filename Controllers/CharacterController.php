@@ -7,9 +7,9 @@ use Services\CharactersService;
 
 class CharacterController {
     public function attack(Request $request, CharactersService $charactersService) {
-        list ($player, $enemy) = $charactersService->updateCharactersStats($request->player, $request->enemy);
-        $attacker = $request->attacker === $player->name ? $enemy->name : $player->name;
-        $inflictedDamage = $request->attacker === $player->name ? $player->attack($enemy) : $enemy->attack($player);
+        list ($player, $enemy) = $charactersService->updateOrCreate($request->player, $request->enemy);
+        $attacker = $charactersService->getAttacker($request->attacker);
+        $inflictedDamage = $charactersService->getInflictedDamage($request->attacker, $player, $enemy);
 
         http_response_code(200);
         echo json_encode([

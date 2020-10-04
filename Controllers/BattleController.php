@@ -6,7 +6,7 @@ use Services\CharactersService;
 
 class BattleController {
     public function start(CharactersService $charactersService) {
-        list($orderus, $beast) = $charactersService->spawn();
+        list($orderus, $beast) = $charactersService->updateOrCreate();
         $attacker = $charactersService->getAttacker();
 
         http_response_code(200);

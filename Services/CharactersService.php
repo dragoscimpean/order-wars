@@ -6,16 +6,23 @@ use Characters\Beast;
 use Characters\Orderus;
 
 class CharactersService {
-    private array $characters = [];
+    private Orderus $player;
+    private Beast $enemy;
 
-    public function spawn() {
-        $this->characters = [new Orderus(), new Beast()];
-        return $this->characters;
+    public function updateOrCreate($player = null, $enemy = null) {
+        $this->player = new Orderus($player);
+        $this->enemy = new Beast($enemy);
+        return [$this->player, $this->enemy];
     }
 
-    public function getAttacker() {
+    public function getAttacker($lastAttacker = null) {
+        if ($lastAttacker) {
+            return $lastAttacker === $this->player->name ? $this->enemy->name : $this->player->name;
+        }
+
+        $characters = [$this->player, $this->enemy];
         $attacker = null;
-        foreach ($this->characters as $character) {
+        foreach ($characters as $character) {
             $attacker = $attacker ?? $character;
             $attacker = $character->speed > $attacker->speed ? $character : $attacker;
             if ($attacker->speed === $character->speed) {
@@ -26,7 +33,8 @@ class CharactersService {
         return $attacker->name;
     }
 
-    public function updateCharactersStats($player, $enemy) {
-        return [new Orderus($player), new Beast($enemy)];
+    public function getInflictedDamage($attacker, $player, $enemy)
+    {
+        return $attacker === $player->name ? $player->attack($enemy) : $enemy->attack($player);
     }
 }

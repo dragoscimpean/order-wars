@@ -66,6 +66,7 @@ export default {
       playerAnimation: 'stand.png',
       enemyAnimation: 'stand.png',
       matchOver: false,
+      backendUrl: 'http://localhost:8081/'
     }
   },
   computed: {
@@ -84,7 +85,7 @@ export default {
     async start() {
       this.started = !this.started;
 
-      const response = await this.$http.get('http://order-wars.test/start');
+      const response = await this.$http.get(this.backendUrl + 'start');
 
       this.player = response.data.orderus;
       this.enemy = response.data.beast;
@@ -108,7 +109,7 @@ export default {
 
         const response = await this.$http({
           method: 'post',
-          url: 'http://order-wars.test/attack',
+          url: this.backendUrl + 'attack',
           data: {
             player: this.player,
             enemy: this.enemy,

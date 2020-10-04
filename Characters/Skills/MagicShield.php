@@ -3,7 +3,7 @@
 namespace Characters\Skills;
 
 trait MagicShield {
-    protected int $magicShieldChance = 50;
+    protected int $magicShieldChance = 20;
     public bool $magicShieldInvoked = false;
 
     public function takeDamage($attacker) {
